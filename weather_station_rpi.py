@@ -13,7 +13,6 @@
 
 import json
 import sys
-# sys.path.append("/home/pi/Documents/temperatureMonitor/script/")
 import time
 import datetime
 import os.path
@@ -22,7 +21,6 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import Adafruit_SSD1306
 from PIL import Image, ImageDraw, ImageFont
-
 
 # Type of sensor, can be DHT11, DHT22, or AM2302.
 DHT_TYPE = Adafruit_DHT.DHT22
@@ -122,7 +120,6 @@ def main ():
 
     # Conversion and rounding
     temp_c_round = '%6.2f' % temp_c
-
     temp_c = round(temp_c)
     temp_f = ((temp_c * 1.8) + 32)
     #temp_f_round = '%6.2f' % temp_f
