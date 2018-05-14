@@ -76,11 +76,12 @@ def login_open_sheet(oauth_key_file, spreadsheet):
         sh = gc.open(spreadsheet)
 	worksheet = sh.worksheet("Inside")
         return worksheet
+	worksheet1 = sh.worksheet("Outside")
+	return worksheet1
     except Exception as ex:
         print('Unable to login and get spreadsheet.  Check OAuth credentials, spreadsheet name, and make sure spreadsheet is shared to the client_email address in the OAuth .json file!')
         print('Google sheet login failed with error:', ex)
         sys.exit(1)
-
 
 # Set up Display
 RST =24
@@ -122,12 +123,14 @@ def main ():
     # Conversion and rounding
     temp_c_round = '%6.2f' % temp_c
     temp_c = round(temp_c)
-    temp_f = ((temp_c * 1.8) + 32)
-    #temp_f_round = '%6.2f' % temp_f
+    temp_f = temp_c *9/5.0 + 32
+    temp_f_round = '%6.2f' % temp_f
+   # print(temp_f)
+   # print(temp_f_round)
 
     # Print Temperature on Display
     displaySensorName ="DHT22 Sensor :"
-    displayTempValue = temp_c_round + " " + a + "C" 
+    displayTempValue = temp_f_round + " " + a + "F" 
     draw.rectangle((0,0,width,height), outline=0, fill=0)
     draw.text((x, top), displaySensorName , font=font, fill=255)
     draw.text((x, top+20), displayTempValue, font=font, fill=255)
@@ -148,15 +151,16 @@ def main ():
     # Append the data in the spreadsheet, including a timestamp
     try:
         worksheet.append_row((datetime.datetime.now(), temp_c_round))
+	val = worksheet.acell('B2').value
     except:
         # Error appending data, most likely because credentials are stale.
         # Null out the worksheet so a login is performed at the top of the loop.
         print('Append error, logging in again')
         worksheet = None
         time.sleep(FREQUENCY_SECONDS)
-
+	
     print('Wrote a row to {0}'.format(GDOCS_SPREADSHEET_NAME))
-    
+    print(val)
 
 if __name__ == "__main__":
     main()
